@@ -44,10 +44,9 @@ def init_db_cmd():
     db.create_all()
     print('Initialized the database.')
 
-@app.before_first_request
-def init_db_once():
-    # Ensure tables exist in both local and hosted environments
+with app.app_context():
     db.create_all()
+
 
 # ROUTES
 @app.route('/')
@@ -133,6 +132,10 @@ def delete_entry(entry_id):
     db.session.commit()
     flash('Progress entry deleted', 'info')
     return redirect(url_for('project_detail', project_id=project_id))
+
+# Ensure tables exist at startup
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
