@@ -1,0 +1,66 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h3 class="mb-0">{{ project.name }}</h3>
+  <div>
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('edit_project', project_id=project.id) }}">Edit</a>
+    <form action="{{ url_for('delete_project', project_id=project.id) }}" method="post" class="d-inline" onsubmit="return confirm('Delete this project?');">
+      <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
+<p class="text-muted">{{ project.description }}</p>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-body-secondary">Dates & Status</h6>
+        <ul class="list-unstyled mb-0">
+          <li><strong>Start Date:</strong> {{ project.start_date }}</li>
+          <li><strong>Progress (summary):</strong> {{ project.progress or '—' }}</li>
+          <li><strong>End Date:</strong> {{ project.end_date or '—' }}</li>
+          <li><strong>Status:</strong> {{ project.status or '—' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-body-secondary">Add a progress update</h6>
+        <form method="post" action="{{ url_for('add_entry', project_id=project.id) }}">
+          {{ entry_form.hidden_tag() }}
+          <div class="mb-2">
+            {{ entry_form.content(class="form-control", rows=3, placeholder="What changed?") }}
+            {% for e in entry_form.content.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          {{ entry_form.submit(class="btn btn-primary btn-sm") }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mt-3">
+  <div class="card-body">
+    <h6 class="card-subtitle mb-2 text-body-secondary">Progress entries</h6>
+    {% if entries %}
+      <ul class="list-group">
+        {% for e in entries %}
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ e.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+              <pre class="mb-0" style="white-space: pre-wrap">{{ e.content }}</pre>
+            </div>
+            <form method="post" action="{{ url_for('delete_entry', entry_id=e.id) }}" onsubmit="return confirm('Delete this entry?');">
+              <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="mb-0">No entries yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

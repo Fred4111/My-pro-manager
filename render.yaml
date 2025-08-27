@@ -1,0 +1,19 @@
+
+services:
+  - type: web
+    name: project-crud-flask
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      # For production persistence, point DATABASE_URL to a managed PostgreSQL instance on Render.
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: project-db
+      #     property: connectionString
+# databases:
+#   - name: project-db
+#     plan: free

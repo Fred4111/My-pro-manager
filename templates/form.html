@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h3>{{ title }}</h3>
+<form method="post" novalidate>
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.name.label(class="form-label") }}
+    {{ form.name(class="form-control", placeholder="Project name") }}
+    {% for e in form.name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.description.label(class="form-label") }}
+    {{ form.description(class="form-control", rows=3, placeholder="Brief description") }}
+  </div>
+  <div class="mb-3">
+    {{ form.start_date.label(class="form-label") }}
+    {{ form.start_date(class="form-control", placeholder="YYYY-MM-DD") }}
+    {% for e in form.start_date.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+  </div>
+  <!-- Progress placed between start and end date -->
+  <div class="mb-3">
+    {{ form.progress.label(class="form-label") }}
+    {{ form.progress(class="form-control", rows=4, placeholder="Overall progress/notes") }}
+  </div>
+  <div class="mb-3">
+    {{ form.end_date.label(class="form-label") }}
+    {{ form.end_date(class="form-control", placeholder="YYYY-MM-DD") }}
+    {% for e in form.end_date.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.status.label(class="form-label") }}
+    {{ form.status(class="form-control", placeholder="Planned / In Progress / Completed") }}
+  </div>
+  {{ form.submit(class="btn btn-primary") }}
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
